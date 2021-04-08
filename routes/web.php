@@ -14,8 +14,8 @@ use App\Http\Controllers\PgController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::post('/transaction', [PgController::class, 'transaction']);
 
-Route::get('/pg', [PgController::class, 'index']);

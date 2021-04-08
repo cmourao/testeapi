@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePessoaTable extends Migration
+class CreateTransacaoEstadoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreatePessoaTable extends Migration
      */
     public function up()
     {
-        Schema::create('pessoa', function (Blueprint $table) {
+        Schema::create('transacao_estado', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('email', 150)->unique();
-            $table->string('senha');
-            $table->integer('pessoa_tipo_id')->unsigned()->index();
-            $table->foreign('pessoa_tipo_id')->references('id')->on('pessoa_tipo');            
+            $table->string('Descricao');
         });
     }
 
@@ -29,6 +26,6 @@ class CreatePessoaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pessoa');
+        Schema::dropIfExists('transacao_estado');
     }
 }
