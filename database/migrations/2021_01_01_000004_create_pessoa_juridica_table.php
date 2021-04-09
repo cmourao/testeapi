@@ -16,8 +16,8 @@ class CreatePessoaJuridicaTable extends Migration
         Schema::create('pessoa_juridica', function (Blueprint $table) {
             $table->increments('id');
             $table->string('razao_social', 500);
-            $table->string('cnpj', 14);
-            $table->integer('pessoa_id')->unsigned()->index();
+            $table->string('cnpj', 14)->unique();
+            $table->unsignedInteger('pessoa_id');
             $table->foreign('pessoa_id')->references('id')->on('pessoa');
         });
     }

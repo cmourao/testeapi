@@ -14,7 +14,7 @@ class CreatePessoaTable extends Migration
     public function up()
     {
         Schema::create('pessoa', function (Blueprint $table) {
-            $table->increments('id');
+            $table->unsignedInteger('id')->primary();
             $table->string('email', 150)->unique();
             $table->string('senha');
             $table->integer('pessoa_tipo_id')->unsigned()->index();

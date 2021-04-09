@@ -16,8 +16,8 @@ class CreatePessoaFisicaTable extends Migration
         Schema::create('pessoa_fisica', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nome', 500);
-            $table->string('cpf', 11);
-            $table->integer('pessoa_id')->unsigned()->index();
+            $table->string('cpf', 11)->unique();
+            $table->unsignedInteger('pessoa_id');
             $table->foreign('pessoa_id')->references('id')->on('pessoa');
         });
     }

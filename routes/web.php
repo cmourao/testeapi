@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PgController;
+use App\Http\Controllers\TransacaoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +17,5 @@ use App\Http\Controllers\PgController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::post('/transaction', [PgController::class, 'transaction']);
+Route::post('/transaction', [TransacaoController::class, 'create']);
 

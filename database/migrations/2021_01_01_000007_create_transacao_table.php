@@ -22,6 +22,8 @@ class CreateTransacaoTable extends Migration
             $table->integer('pessoa_destino_id')->unsigned()->index();
             $table->foreign('pessoa_destino_id')->references('id')->on('pessoa');
 
+            $table->float('valor');
+
             $table->integer('transacao_estado_id')->unsigned()->index();
             $table->foreign('transacao_estado_id')->references('id')->on('transacao_estado');
                         

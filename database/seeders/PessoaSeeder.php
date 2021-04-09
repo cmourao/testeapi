@@ -21,38 +21,40 @@ class PessoaSeeder extends Seeder
         $pessoaFisica = PessoaTipo::where('Descricao', 'Pessoa Física')->first();
         $pessoaJuridica = PessoaTipo::where('Descricao', 'Pessoa Jurídica')->first();
 
+        $joseId = 4;
         Pessoa::create([
-            "email" => "walter.white@teste.com",
+            "id" => $joseId,
+            "email" => "jose@teste.com",
             "senha" => bcrypt("123"),
             "pessoa_tipo_id" => $pessoaFisica["id"]
         ]);
-        $walter = Pessoa::where("email", "walter.white@teste.com")->first();
         PessoaFisica::create([
-            "nome" => "Walter White",
+            "nome" => "Jose",
             "cpf" => "12345678910",
-            "pessoa_id" => $walter["id"]
-        ]);
+            "pessoa_id" => $joseId
+        ]);        
         Carteira::create([
             "saldo_atual" => 100,
             "saldo_transicao" => 0,
-            "pessoa_id" => $walter["id"]
+            "pessoa_id" => $joseId
         ]);
 
+        $empresaId = 15;
         Pessoa::create([
-            "email" => "contato@poloshermanos.com",
+            "id" => $empresaId,
+            "email" => "empresa@teste.com",
             "senha" => bcrypt("123456"),
             "pessoa_tipo_id" => $pessoaJuridica["id"]
         ]);
-        $polos = Pessoa::where("email", "contato@poloshermanos.com")->first();
         PessoaJuridica::create([
-            "razao_social" => "Polos Hermanos LTDA",
+            "razao_social" => "Teste LTDA",
             "cnpj" => "11111111111111",
-            "pessoa_id" => $polos["id"]
+            "pessoa_id" => $empresaId
         ]);
         Carteira::create([
             "saldo_atual" => 1000,
             "saldo_transicao" => 0,
-            "pessoa_id" => $polos["id"]
+            "pessoa_id" => $empresaId
         ]);
     }
 }
