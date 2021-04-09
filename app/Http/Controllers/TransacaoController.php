@@ -5,31 +5,24 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TransacaoRequest;
 use Illuminate\Http\Request;
 use App\Services\TransacaoService;
+use App\Services\CarteiraService;
 use Illuminate\Support\Facades\Validator;
 
 class TransacaoController extends Controller
 {
 
-    protected $transacaoService;
+    protected $transacaoService, $carteiraService;
 
-    public function __construct(TransacaoService $transacaoService)
+    public function __construct(TransacaoService $transacaoService, CarteiraService $carteiraService)
     {
         $this->transacaoService = $transacaoService;
+        $this->carteiraService = $carteiraService;
     }
 
     public function create(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'value' => 'required',
-        //     'payer' => 'required',
-        //     'payee' => 'required'
-        // ]);
-        // if ($validator->fails()) {
-        //     return response()->json($validator->getMessageBag(), 200);
-        // }
 
-        $create = $this->transacaoService->create($request);
-        //return response()->json('sucesso');
+        $create = $this->transacaoService->create($request, $this->carteiraService);
 
         return response()->json($create["msg"], $create["statusCode"]);
     }

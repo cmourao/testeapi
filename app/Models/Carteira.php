@@ -11,4 +11,5 @@ class Carteira extends Model
 
     protected $table = 'carteira';
     public $timestamps = false;
+    protected $fillable = ["saldo_atual", "saldo_transicao"];
 }
