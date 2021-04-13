@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\Pessoa;
-use App\Models\Transacao;
 use App\Models\TransacaoPermissoes;
 use App\Repositories\TransacaoRepository;
 use App\Services\CarteiraService;
+use App\Http\Requests\TransacaoRequest;
+use App\Models\Carteira;
+use App\Repositories\CarteiraRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
@@ -21,30 +23,35 @@ class TransacaoService
         $this->transacao = $transacao;
     }
 
-    public function index()
-    {
-        return $this->transacao->all();
-    }
-
     public function create(Request $request, CarteiraService $carteiraService)
     {
-
+        //recuperar todos os valores do request
         $requestAll = $request->all();
 
-        //validacao campos
-        $validator = Validator::make($request->all(), [
-            'value' => 'required|gt:0.00',
-            'payer' => 'required',
-            'payee' => 'required'
-        ]);
+        //validacao
+        $validator = Validator::make($request->all(), $this->regrasValidacao());
         if ($validator->fails()) {
-            return ["msg" => $validator->getMessageBag(), "statusCode" => 422];
+            return $this->enviarResposta($validator->getMessageBag(), 422);
         }
+
+        //verificar se carteiras sao validas
+        $payer = $carteiraService->findByPessoaId($requestAll["payer"]);
+        if (!$payer) {
+            return $this->enviarResposta("Pagador não existe", 403);
+        }
+        $payee = $carteiraService->findByPessoaId($requestAll["payee"]);
+        if (!$payee) {
+            return $this->enviarResposta("Beneficiário não existe", 403);
+        }
+
+        return $this->enviarResposta([$payer, $payee], 200);
+
 
         //verificacao se fluxo de pagamento é permitido
         if (!$this->verificarFluxoPermissaoTransacao($requestAll["payer"], $requestAll["payee"])) {
-            return ["msg" => "Fluxo pagamento não permitido", "statusCode" => 403];
+            return $this->enviarResposta("Fluxo pagamento não permitido",  403);
         }
+
 
         //iniciar pagamento colocando o valor como saldo em transicao em cada conta - não concluida implementacao
         // $carteiraService->iniciarPagamento($requestAll["payer"], $requestAll["payee"], $requestAll["value"]);        
@@ -71,6 +78,20 @@ class TransacaoService
         $notificacao = $this->enviarNotificacao() ? "Notificacao enviada" : "Notificação pendente";
 
         return ["msg" => ["transacao realizada com sucesso, $notificacao"], "statusCode" => 200];
+    }
+
+    private function regrasValidacao()
+    {
+        return [
+            'value' => 'required|gt:0.00',
+            'payer' => 'required',
+            'payee' => 'required'
+        ];
+    }
+
+    public function enviarResposta($mensagem, $httpStatusCode)
+    {
+        return ["msg" => $mensagem, "statusCode" => $httpStatusCode];
     }
 
     private function enviarNotificacao()

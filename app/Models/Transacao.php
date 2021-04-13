@@ -13,4 +13,9 @@ class Transacao extends Model
     public $timestamps = false;
     protected $fillable = ['pessoa_origem_id', 'pessoa_destino_id', 'valor','transacao_estado_id'];
 
+
+    public function pessoa_origem_id()
+    {
+        return $this->hasOne(Pessoa::class);
+    }
 }

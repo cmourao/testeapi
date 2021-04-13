@@ -2,28 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TransacaoRequest;
-use Illuminate\Http\Request;
-use App\Services\TransacaoService;
+use App\Models\Carteira;
 use App\Services\CarteiraService;
-use Illuminate\Support\Facades\Validator;
+use App\Services\TransacaoService;
+use Illuminate\Http\Request;
 
 class TransacaoController extends Controller
 {
 
-    protected $transacaoService, $carteiraService;
+    protected $transacaoService;
 
-    public function __construct(TransacaoService $transacaoService, CarteiraService $carteiraService)
+    public function __construct(TransacaoService $transacaoService)
     {
         $this->transacaoService = $transacaoService;
-        $this->carteiraService = $carteiraService;
     }
 
-    public function create(Request $request)
+    public function create(Request $request, CarteiraService $carteiraService)
     {
-
-        $create = $this->transacaoService->create($request, $this->carteiraService);
-
+        $create = $this->transacaoService->create($request, $carteiraService);
         return response()->json($create["msg"], $create["statusCode"]);
     }
 }

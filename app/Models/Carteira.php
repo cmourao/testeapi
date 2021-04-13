@@ -12,4 +12,11 @@ class Carteira extends Model
     protected $table = 'carteira';
     public $timestamps = false;
     protected $fillable = ["saldo_atual", "saldo_transicao"];
+    protected $primaryKey = 'id';
+
+    public function pessoa()
+    {
+        return $this->belongsTo('App\Models\Pessoa', 'pessoa_id', 'id');
+    }
+    
 }

@@ -13,6 +13,11 @@ class CarteiraService
         $this->carteira = $carteira;
     }
 
+    public function findByPessoaId($pessoaId)
+    {
+        return $this->carteira->findByPessoaId($pessoaId);
+    }
+
     public function iniciarPagamento($idPessoaOrigem, $idPessoaDestino, $valor)
     {
 

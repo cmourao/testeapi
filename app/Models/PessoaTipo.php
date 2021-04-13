@@ -12,4 +12,10 @@ class PessoaTipo extends Model
 
     protected $table = 'pessoa_tipo';
     public $timestamps = false;
+    protected $primaryKey = 'id';
+
+    public function pesssoas()
+    {
+        return $this->hasMany('App\Models\Pessoa', 'pessoa_tipo_id', 'id');
+    }
 }
