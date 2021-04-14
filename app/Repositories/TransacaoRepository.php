@@ -18,8 +18,4 @@ class TransacaoRepository
         return $this->transacao->create($atributos);
     }
 
-    public function all()
-    {
-        return $this->transacao->all();
-    }
 }

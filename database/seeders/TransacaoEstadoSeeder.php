@@ -20,5 +20,6 @@ class TransacaoEstadoSeeder extends Seeder
         TransacaoEstado::create(["Descricao" => "Processando"]);
         TransacaoEstado::create(["Descricao" => "Efetivada"]);
         TransacaoEstado::create(["Descricao" => "Erro"]);
+        TransacaoEstado::create(["Descricao" => "Notificação pendente"]);
     }
 }

@@ -15,7 +15,7 @@ class CarteiraRepository
 
     public function findByPessoaId($pessoaId)
     {
-        return $this->carteira->where('pessoa_id', $pessoaId)->with('pessoa')->get();
+        return $this->carteira->where('pessoa_id', $pessoaId)->with('pessoa')->first();
     }
 
     // public function find($id)

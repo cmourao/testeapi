@@ -16,6 +16,9 @@ class TransacaoPermissoesRepository
 
     public function findByPessoaTipoOrigemPessoaTipoDestino($pessoaTipoOrigemId, $pessoaTipoDestinoId)
     {
-        
+        return $this->transacaoPermissoes->where([
+            'pessoa_tipo_origem_id' => $pessoaTipoOrigemId,
+            'pessoa_tipo_destino_id' => $pessoaTipoDestinoId
+        ])->first();
     }
 }
