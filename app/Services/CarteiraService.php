@@ -18,23 +18,32 @@ class CarteiraService
         return $this->carteira->findByPessoaId($pessoaId);
     }
 
-    public function iniciarPagamento($idPessoaOrigem, $idPessoaDestino, $valor)
+    public function adicionarSaldoTransicao($pessoaOrigemId, $valor)
+    {
+        //colocar valor a ser pago no saldo de transicao e retirar do saldo atual        
+        $pessoaOrigem = $this->carteira->findByPessoaId($pessoaOrigemId);
+        $this->carteira->updateByPessoaId($pessoaOrigemId, [
+            "saldo_transicao" => $valor,
+            "saldo_atual" => $pessoaOrigem["saldo_atual"] - $valor
+        ]);
+    }
+
+    public function verificarTransacao($pessoaOrigemId, $pessoaDestinoId, $transacaoEfetivada = true)
     {
 
-        // //carteira de origem tem que existir e ter saldo suficiente para transacao
-        // $pessoaOrigemCarteira = $this->carteira->findByPessoaId($idPessoaOrigem);
-        // if ($pessoaOrigemCarteira["exists"] && $pessoaOrigemCarteira["saldo_atual"] < $valor) {
-        //     return false;
-        // }
-        // $this->carteira->update(
-        //     $pessoaOrigemCarteira["id"],
-        //     ["saldo_atual" => $pessoaOrigemCarteira["saldo_atual"] - $valor]
-        // );
+        $pessoaOrigem = $this->carteira->findByPessoaId($pessoaOrigemId);
 
-        // //carteira destino tem que existir
-        // $pessoaDestinoCarteira = $this->carteira->findByPessoaId($idPessoaDestino);
-        // if ($pessoaDestinoCarteira["exists"]) {
-        //     return false;
-        // }
+        $valorRetorno = $transacaoEfetivada ? 0 : $pessoaOrigem["saldo_transicao"];
+        $this->carteira->updateByPessoaId($pessoaOrigemId, [
+            "saldo_transicao" => 0,
+            "saldo_atual" => $pessoaOrigem["saldo_atual"] + $valorRetorno
+        ]);
+
+        $pessoaDestino = $this->carteira->findByPessoaId($pessoaDestinoId);
+        if ($transacaoEfetivada) {
+            $this->carteira->updateByPessoaId($pessoaDestinoId, [
+                "saldo_atual" => $pessoaDestino["saldo_atual"] + $pessoaOrigem["saldo_transicao"]
+            ]);
+        }
     }
 }

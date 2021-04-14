@@ -15,7 +15,11 @@ class TransacaoRepository
 
     public function create($atributos)
     {
-        return $this->transacao->create($atributos);
+        return $this->transacao->create($atributos)->id;
     }
 
+    public function update($id, $atributos)
+    {
+        return $this->transacao->where('id', $id)->update($atributos);
+    }
 }

@@ -18,20 +18,9 @@ class CarteiraRepository
         return $this->carteira->where('pessoa_id', $pessoaId)->with('pessoa')->first();
     }
 
-    // public function find($id)
-    // {
-    //     return $this->carteira->find($id);
-    // }
-
-    // public function updateByPessoaId($pessoaId, $atributos)
-    // {
-    //     return $this->carteira->where('pessoa_id', $pessoaId)->update($atributos);
-    // }
-
-    // public function update($id, $atributos)
-    // {
-    //     return $this->carteira->find($id)->update($atributos);
-    // }
-
+    public function updateByPessoaId($pessoaId, $atributos)
+    {
+        $this->carteira->where('pessoa_id', $pessoaId)->update($atributos);
+    }
 
 }
