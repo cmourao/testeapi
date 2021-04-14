@@ -37,17 +37,17 @@ class TransacaoService
 
         //pagador e beneficiario nao podem ser os mesmos
         if ($requestAll["payer"] == $requestAll["payee"]) {
-            return $this->enviarResposta("A transação não pode ser realizada para a mesma pessoa", 403);
+            return $this->enviarResposta(["A transação não pode ser realizada para a mesma pessoa"], 403);
         }
 
         //verificar se carteiras sao validas
         $carteiraPayer = $carteiraService->findByPessoaId($requestAll["payer"]);
         if (!$carteiraPayer) {
-            return $this->enviarResposta("Pagador não existe", 403);
+            return $this->enviarResposta(["O pagador não existe"], 403);
         }
         $carteiraPayee = $carteiraService->findByPessoaId($requestAll["payee"]);
         if (!$carteiraPayee) {
-            return $this->enviarResposta("Beneficiário não existe", 403);
+            return $this->enviarResposta(["O beneficiário não existe"], 403);
         }
 
         //verificacao se fluxo de pagamento é permitido
@@ -56,12 +56,12 @@ class TransacaoService
             $carteiraPayee["pessoa"]["pessoa_tipo_id"]
         );
         if (!$permitido) {
-            return $this->enviarResposta("Fluxo pagamento não permitido",  403);
+            return $this->enviarResposta(["Fluxo pagamento não permitido"],  403);
         }
 
         //pagador tem saldo?        
         if ($carteiraPayer["saldo_atual"] < $requestAll["value"]) {
-            return $this->enviarResposta("Pagador sem saldo",  403);
+            return $this->enviarResposta(["Pagador sem saldo"],  403);
         }        
 
         //criar transacao
@@ -73,7 +73,7 @@ class TransacaoService
         ]);
         //retornar mensagem caso nao criada transacao
         if (!$createId) {
-            $this->enviarResposta("Transação não criada", 403);
+            $this->enviarResposta(["Transação não criada"], 403);
         }
 
         //iniciar pagamento colocando o valor como saldo em transicao em cada conta - não concluida implementacao
@@ -88,7 +88,7 @@ class TransacaoService
             //estado da transacao erro
             $this->transacao->update($createId, ["transacao_estado_id" => 4]); //erro
 
-            return $this->enviarResposta("Pagamento não possui autorização externa", 403);
+            return $this->enviarResposta(["Pagamento não possui autorização externa"], 403);
         }
 
         $carteiraService->verificarTransacao($requestAll["payer"], $requestAll["payee"], true);
@@ -101,7 +101,7 @@ class TransacaoService
             $this->transacao->update($createId, ["transacao_estado_id" => 5]); //notificacao pendente
         }
 
-        return $this->enviarResposta("Transacao realizada com sucesso", 200);
+        return $this->enviarResposta(["Transação realizada com sucesso"], 200);
     }
 
     private function regrasValidacao()
